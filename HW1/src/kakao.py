@@ -49,14 +49,57 @@ class KakaoClient:
 		return {"Authorization": f"Bearer {token}"}
 
 	def send_self_memo(self, text: str) -> None:
+		# 카카오톡 메시지 길이 제한 (약 200자)
+		max_length = 200
+		
+		if len(text) <= max_length:
+			self._send_single_message(text)
+		else:
+			# 긴 메시지를 여러 개로 분할
+			parts = self._split_message(text, max_length)
+			for i, part in enumerate(parts, 1):
+				message = f"[{i}/{len(parts)}]\n{part}"
+				self._send_single_message(message)
+	
+	def _split_message(self, text: str, max_length: int) -> list:
+		"""메시지를 적절한 길이로 분할"""
+		lines = text.split('\n')
+		parts = []
+		current_part = []
+		current_length = 0
+		
+		for line in lines:
+			line_length = len(line) + 1  # +1 for newline
+			
+			if current_length + line_length > max_length and current_part:
+				parts.append('\n'.join(current_part))
+				current_part = [line]
+				current_length = line_length
+			else:
+				current_part.append(line)
+				current_length += line_length
+		
+		if current_part:
+			parts.append('\n'.join(current_part))
+		
+		return parts
+	
+	def _send_single_message(self, text: str) -> None:
+		"""단일 메시지 전송"""
 		url = f"{KAKAO_API_HOST}/v2/api/talk/memo/default/send"
 		payload = {"object_type": "text", "text": text, "link": {}}
 		headers = self._get_auth_header()
-		resp = requests.post(url, headers=headers, json={"template_object": payload}, timeout=10)
+		headers["Content-Type"] = "application/x-www-form-urlencoded"
+		
+		# form-data 형식으로 전송
+		data = {"template_object": json_dumps(payload)}
+		resp = requests.post(url, headers=headers, data=data, timeout=10)
+		
 		if resp.status_code == 401:
 			self._refresh_access_token()
 			headers = self._get_auth_header()
-			resp = requests.post(url, headers=headers, json={"template_object": payload}, timeout=10)
+			headers["Content-Type"] = "application/x-www-form-urlencoded"
+			resp = requests.post(url, headers=headers, data=data, timeout=10)
 		resp.raise_for_status()
 
 	def list_friends(self) -> Any:
