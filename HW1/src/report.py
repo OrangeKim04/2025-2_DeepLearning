@@ -50,9 +50,9 @@ def build_report(user_name: str, kr_recos: List[Dict[str, Any]], us_recos: List[
 	stamp = now_kst.strftime("%Y년 %m월 %d일 %H시 %M분")
 	
 	lines: List[str] = [
-		"=" * 60,
+		"=" * 40,
 		header,
-		"=" * 60,
+		"=" * 40,
 		f"📅 보고 날짜: {stamp}",
 		"",
 		"🇰🇷 국내 주식 추천 (TOP 3)",
@@ -66,16 +66,16 @@ def build_report(user_name: str, kr_recos: List[Dict[str, Any]], us_recos: List[
 	lines.append(format_recommendation_block("", us_recos))
 	lines.append("")
 	lines.append("📰 시장 뉴스 요약")
-	lines.append("─" * 30)
+	lines.append("─" * 20)
 	lines.append(news_summary)
 	lines.append("")
 	lines.append("⚠️ 투자 주의사항")
-	lines.append("─" * 30)
+	lines.append("─" * 20)
 	lines.append("• 본 정보는 투자 참고용이며, 투자 결정은 본인의 판단과 책임하에 이루어져야 합니다.")
 	lines.append("• 과거 성과가 미래 수익을 보장하지 않습니다.")
 	lines.append("• 투자 전 충분한 검토와 리스크 관리가 필요합니다.")
 	lines.append("")
-	lines.append("=" * 60)
+	lines.append("=" * 40)
 	
 	return "\n".join([l for l in lines if l is not None])
 
