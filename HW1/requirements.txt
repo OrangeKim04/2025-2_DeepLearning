@@ -1,10 +1,21 @@
-pandas==2.2.2
-yfinance==0.2.43
-FinanceDataReader==0.9.90
-requests==2.32.3
-python-dotenv==1.0.1
-APScheduler==3.10.4
-pytz==2024.1
-openai==1.51.0
-numpy==2.0.2
-scipy==1.13.1
+# 데이터 처리 및 분석
+pandas==2.2.2                    # 데이터프레임 처리, 주식 데이터 분석
+numpy==2.0.2                     # 수치 계산, 배열 연산
+scipy==1.13.1                    # 과학 계산, 통계 분석
+
+# 주식 데이터 수집
+yfinance==0.2.43                 # 미국 주식 데이터 (Yahoo Finance)
+finance-datareader==0.9.96       # 한국 주식 데이터 (KRX)
+
+# HTTP 요청 및 웹 스크래핑
+requests==2.32.3                 # HTTP 요청, 뉴스 RSS 피드 수집
+
+# 환경변수 관리
+python-dotenv==1.0.1             # .env 파일에서 환경변수 로드
+
+# 스케줄링
+APScheduler==3.10.4              # 주기적 작업 스케줄링
+pytz==2024.1                     # 시간대 처리
+
+# AI/ML
+openai==1.51.0                   # OpenAI API, 뉴스 요약
