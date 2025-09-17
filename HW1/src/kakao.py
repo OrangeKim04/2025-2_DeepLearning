@@ -49,17 +49,9 @@ class KakaoClient:
 		return {"Authorization": f"Bearer {token}"}
 
 	def send_self_memo(self, text: str) -> None:
-		# 카카오톡 메시지 길이 제한 (약 200자)
-		max_length = 200
-		
-		if len(text) <= max_length:
-			self._send_single_message(text)
-		else:
-			# 긴 메시지를 여러 개로 분할
-			parts = self._split_message(text, max_length)
-			for i, part in enumerate(parts, 1):
-				message = f"[{i}/{len(parts)}]\n{part}"
-				self._send_single_message(message)
+		# 카카오톡 메시지를 한 번에 전송 (분할하지 않음)
+		# 카카오톡 API는 실제로 더 긴 메시지를 지원함
+		self._send_single_message(text)
 	
 	def _split_message(self, text: str, max_length: int) -> list:
 		"""메시지를 적절한 길이로 분할"""
