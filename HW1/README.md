@@ -64,6 +64,16 @@ OPENAI_API_KEY=sk-...
 Token note: Access tokens expire. This app auto-refreshes using the refresh token and stores the latest tokens in `token_store.json`.
 
 ### How to Run
+
+#### 1. 웹 애플리케이션 (권장)
+```bash
+python src/web_app.py
+```
+- 브라우저에서 `http://localhost:5000` 접속
+- 실시간 데이터 업데이트 가능
+- 모바일 친화적 반응형 UI
+
+#### 2. 원래 방식
 - One-off run now:
 ```bash
 python -m src.main
@@ -71,6 +81,23 @@ python -m src.main
 - Start scheduler (runs daily at 08:30 Asia/Seoul):
 ```bash
 python -m src.scheduler_job
+```
+
+### 웹 배포 (Heroku)
+1. Heroku CLI 설치
+2. Heroku 앱 생성:
+```bash
+heroku create your-app-name
+```
+3. 환경변수 설정:
+```bash
+heroku config:set USER_NAME=JAKE
+heroku config:set OPENAI_API_KEY=your_key
+# 기타 필요한 환경변수들...
+```
+4. 배포:
+```bash
+git push heroku main
 ```
 
 ### KakaoTalk Permissions
