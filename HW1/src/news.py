@@ -20,19 +20,34 @@ def fetch_market_headlines() -> List[str]:
 	sources = [
 		"https://finance.yahoo.com/news/rssindex",
 		"https://www.koreaherald.com/rss/020303000000.xml",
+		"https://rss.cnn.com/rss/money_news_international.rss",
+		"https://feeds.reuters.com/reuters/businessNews",
 	]
 	headlines: List[str] = []
+	
 	for url in sources:
 		try:
-			resp = requests.get(url, timeout=10)
+			# User-Agent 헤더 추가로 403 오류 방지
+			headers = {
+				'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+			}
+			resp = requests.get(url, headers=headers, timeout=10)
+			resp.raise_for_status()  # HTTP 오류 확인
+			
 			text = resp.text
 			for line in text.splitlines():
 				if "<title>" in line and "</title>" in line:
 					t = line.split("<title>")[-1].split("</title>")[0].strip()
-					if t and t.lower() != "yahoo news - latest news & headlines":
+					if t and t.lower() not in ["yahoo news - latest news & headlines", "rss feed"]:
 						headlines.append(t)
-		except Exception:
+		except Exception as e:
+			print(f"뉴스 수집 실패 ({url}): {e}")
 			continue
+	
+	# 뉴스가 없으면 기본 메시지
+	if not headlines:
+		headlines = ["시장 뉴스 수집에 일시적 문제가 있습니다.", "주식 시장 동향을 확인해주세요."]
+	
 	return headlines[:10]
 
 
