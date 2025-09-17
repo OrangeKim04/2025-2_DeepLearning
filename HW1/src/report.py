@@ -21,30 +21,62 @@ def format_recommendation_block(title: str, items: List[Dict[str, Any]]) -> str:
 		close = it["close"]
 		low52 = it["low_52w"]
 		high52 = it["high_52w"]
-		lines.append(f"**{idx}. {name} ({code})**")
-		lines.append(f"**• 추천 이유:** {reason}")
-		lines.append(f"**• 매수 시점:** {entry}")
-		lines.append(f"**• 매도 시점:** {exit_}")
-		lines.append(f"**• 참고 가격:** 종가 {close:,.2f}, 52주 최저 {low52:,.2f} / 최고 {high52:,.2f}")
+		
+		# 이모지와 함께 더 보기 좋게 포맷팅
+		lines.append(f"🔥 {idx}. {name} ({code})")
+		lines.append("")
+		lines.append(f"📊 추천 이유:")
+		lines.append(f"   {reason}")
+		lines.append("")
+		lines.append(f"📈 매수 시점:")
+		lines.append(f"   {entry}")
+		lines.append("")
+		lines.append(f"📉 매도 시점:")
+		lines.append(f"   {exit_}")
+		lines.append("")
+		lines.append(f"💰 가격 정보:")
+		lines.append(f"   현재가: {close:,.0f}원")
+		lines.append(f"   52주 최저: {low52:,.0f}원")
+		lines.append(f"   52주 최고: {high52:,.0f}원")
+		lines.append("")
+		lines.append("─" * 50)
 		lines.append("")
 	return "\n".join(lines).strip()
 
 
 def build_report(user_name: str, kr_recos: List[Dict[str, Any]], us_recos: List[Dict[str, Any]], news_summary: str) -> str:
 	now_kst = datetime.now(KST)
-	header = f"**[{user_name}님을 위한 오늘의 주식 보고서]**"
-	stamp = now_kst.strftime("%Y-%m-%d 오전 %I:%M").lstrip("0")
-	lines: List[str] = [header, f"보고 날짜 및 시간: {stamp}", ""]
-	lines.append("파트 1: 국내 주식 추천")
+	header = f"📈 {user_name}님을 위한 오늘의 주식 보고서 📈"
+	stamp = now_kst.strftime("%Y년 %m월 %d일 %H시 %M분")
+	
+	lines: List[str] = [
+		"=" * 60,
+		header,
+		"=" * 60,
+		f"📅 보고 날짜: {stamp}",
+		"",
+		"🇰🇷 국내 주식 추천 (TOP 3)",
+		""
+	]
+	
 	lines.append(format_recommendation_block("", kr_recos))
 	lines.append("")
-	lines.append("파트 2: 해외 주식 추천")
+	lines.append("🇺🇸 해외 주식 추천 (TOP 3)")
+	lines.append("")
 	lines.append(format_recommendation_block("", us_recos))
 	lines.append("")
-	lines.append("시장 한줄 요약")
+	lines.append("📰 시장 뉴스 요약")
+	lines.append("─" * 30)
 	lines.append(news_summary)
 	lines.append("")
-	lines.append("**※본 정보는 투자 참고용이며, 투자 결정은 본인의 판단과 책임하에 이루어져야 합니다.**")
+	lines.append("⚠️ 투자 주의사항")
+	lines.append("─" * 30)
+	lines.append("• 본 정보는 투자 참고용이며, 투자 결정은 본인의 판단과 책임하에 이루어져야 합니다.")
+	lines.append("• 과거 성과가 미래 수익을 보장하지 않습니다.")
+	lines.append("• 투자 전 충분한 검토와 리스크 관리가 필요합니다.")
+	lines.append("")
+	lines.append("=" * 60)
+	
 	return "\n".join([l for l in lines if l is not None])
 
 
