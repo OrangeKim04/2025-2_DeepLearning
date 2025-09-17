@@ -56,9 +56,9 @@ KAKAO_ACCESS_TOKEN=your_initial_access_token
 # Optional: OpenAI for news summarization
 OPENAI_API_KEY=sk-...
 
-# Universe configuration (override defaults if desired)
-KR_TICKERS=005930,000660,035420   # Samsung Elec, SK Hynix, Naver
-US_TICKERS=AAPL,MSFT,NVDA
+# Universe configuration (optional - leave empty for automatic selection)
+# KR_TICKERS=005930,000660,035420   # Override Korean stocks if desired
+# US_TICKERS=AAPL,MSFT,NVDA         # Override US stocks if desired
 ```
 
 Token note: Access tokens expire. This app auto-refreshes using the refresh token and stores the latest tokens in `token_store.json`.
