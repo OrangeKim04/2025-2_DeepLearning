@@ -9,6 +9,7 @@ finance-datareader==0.9.96       # 한국 주식 데이터 (KRX)
 
 # HTTP 요청 및 웹 스크래핑
 requests==2.32.3                 # HTTP 요청, 뉴스 RSS 피드 수집
+beautifulsoup4==4.12.3           # HTML 파싱, S&P 500 종목 리스트 수집
 
 # 환경변수 관리
 python-dotenv==1.0.1             # .env 파일에서 환경변수 로드
