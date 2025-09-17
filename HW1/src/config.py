@@ -31,8 +31,8 @@ class AppConfig:
 	def load() -> "AppConfig":
 		return AppConfig(
 			user_name=os.getenv("USER_NAME", "USER"),
-			kr_tickers=_load_list_from_env("KR_TICKERS", ["005930", "000660", "035420"]),
-			us_tickers=_load_list_from_env("US_TICKERS", ["AAPL", "MSFT", "NVDA"]),
+			kr_tickers=_load_list_from_env("KR_TICKERS", []),  # 자동 선별 사용
+			us_tickers=_load_list_from_env("US_TICKERS", []),  # 자동 선별 사용
 			openai_api_key=os.getenv("OPENAI_API_KEY"),
 			kakao_client_id=os.getenv("KAKAO_CLIENT_ID", ""),
 			kakao_redirect_uri=os.getenv("KAKAO_REDIRECT_URI", "http://localhost"),
