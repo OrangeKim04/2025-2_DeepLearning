@@ -3,8 +3,8 @@ from __future__ import annotations
 from typing import List, Dict, Any, Tuple
 import pandas as pd
 
-from .indicators import add_sma, add_rsi, add_macd, add_bbands
-from .data_fetchers import compute_52w_stats
+from indicators import add_sma, add_rsi, add_macd, add_bbands
+from data_fetchers import compute_52w_stats
 
 
 def enrich_indicators(df: pd.DataFrame) -> pd.DataFrame:

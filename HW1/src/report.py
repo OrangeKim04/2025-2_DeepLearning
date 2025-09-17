@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import List, Dict, Any
 import pytz
 
-from .data_fetchers import get_kr_ticker_name, get_us_ticker_name
+from data_fetchers import get_kr_ticker_name, get_us_ticker_name
 
 
 KST = pytz.timezone("Asia/Seoul")

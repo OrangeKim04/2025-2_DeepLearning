@@ -4,7 +4,7 @@ import time
 from typing import Optional, Dict, Any
 import requests
 
-from .config import AppConfig, load_token_store, save_token_store
+from config import AppConfig, load_token_store, save_token_store
 
 KAKAO_AUTH_HOST = "https://kauth.kakao.com"
 KAKAO_API_HOST = "https://kapi.kakao.com"

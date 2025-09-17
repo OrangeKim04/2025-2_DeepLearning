@@ -4,7 +4,7 @@ from datetime import datetime
 import pytz
 from apscheduler.schedulers.blocking import BlockingScheduler
 
-from .main import run_once
+from main import run_once
 
 KST = pytz.timezone("Asia/Seoul")
 
