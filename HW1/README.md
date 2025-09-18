@@ -17,7 +17,7 @@
 - **📊 실시간 분석**: RSI, MACD, 거래량 등 기술적 지표 기반 분석
 - **🎯 개인화된 추천**: 각 종목별 맞춤형 매수/매도 시점 제시
 - **📱 카카오톡 자동 메모**: 실시간 리포트를 본인 카카오톡으로 즉시 전송
-- **🌐 웹 대시보드**: ngrok을 통한 외부 접근 가능한 웹 인터페이스
+- **🔗 웹 링크 지원**: 카카오톡 "자세히 보기"로 동일한 리포트 웹에서 확인
 - **📰 뉴스 요약**: OpenAI를 활용한 시장 뉴스 자동 요약
 
 ## 🔧 기술적 특징
@@ -26,7 +26,7 @@
 - **🎯 스크리닝**: 시가총액, 거래량, 변동성 기반 종목 선별
 - **🤖 AI 뉴스 요약**: OpenAI GPT를 활용한 시장 뉴스 자동 요약
 - **⏰ 자동 스케줄링**: 매일 08:30 KST 자동 실행
-- **🌐 웹 인터페이스**: Flask 기반 실시간 대시보드
+- **🌐 웹 링크**: Flask 기반 카카오톡 링크용 최소 서버
 - **🚀 AI 개발 도구**: Cursor AI 코딩 어시스턴트로 효율적 개발
 
 ## 📁 프로젝트 구조
@@ -34,9 +34,7 @@
 HW1/
 ├── README.md                 # 프로젝트 문서
 ├── requirements.txt          # Python 의존성
-├── .env.example             # 환경변수 템플릿
-├── templates/
-│   └── index.html           # 웹 대시보드 템플릿
+├── .env                     # 환경변수 설정 (숨김 파일)
 └── src/
     ├── __init__.py
     ├── config.py            # 설정 관리
@@ -48,7 +46,7 @@ HW1/
     ├── news.py              # 뉴스 수집 및 요약
     ├── report.py            # 리포트 생성
     ├── kakao.py             # 카카오톡 API 연동
-    ├── web_app.py           # Flask 웹 애플리케이션
+    ├── web_app.py           # Flask 웹 서버 (카카오톡 링크용)
     ├── scheduler_job.py     # 자동 스케줄링
     └── main.py              # 메인 실행 파일
 ```
@@ -83,9 +81,8 @@ USER_NAME=YOUR_NAME
 
 # 카카오 OAuth 설정 (필수)
 KAKAO_CLIENT_ID=your_kakao_rest_api_key
-KAKAO_REDIRECT_URI=http://localhost
-KAKAO_REFRESH_TOKEN=your_refresh_token
 KAKAO_ACCESS_TOKEN=your_initial_access_token
+KAKAO_REFRESH_TOKEN=your_refresh_token
 
 # OpenAI API (선택사항 - 뉴스 요약용)
 OPENAI_API_KEY=sk-your_openai_api_key
@@ -107,21 +104,21 @@ NGROK_URL=https://your-ngrok-url.ngrok-free.app
 
 ## 🎮 실행 방법
 
-### 🌐 웹 애플리케이션 (권장)
-```bash
-python src/web_app.py
-```
-- **브라우저 접속**: `http://localhost:5000`
-- **실시간 업데이트**: 웹에서 데이터 새로고침 가능
-- **모바일 최적화**: 반응형 UI로 모든 디바이스 지원
-- **외부 접근**: ngrok을 통한 외부에서도 접근 가능
-
-### 📱 카카오톡 메시지 전송
+### 📱 카카오톡 메시지 전송 (메인 기능)
 ```bash
 python src/main.py
 ```
 - **즉시 실행**: 현재 시점의 분석 결과를 카카오톡으로 전송
-- **공통 데이터**: 웹과 동일한 데이터 사용
+- **웹 링크 지원**: "자세히 보기" 버튼으로 동일한 리포트 웹에서 확인
+- **모바일/웹 지원**: 모든 디바이스에서 동일한 경험
+
+### 🌐 웹 서버 (카카오톡 링크용)
+```bash
+python src/web_app.py
+```
+- **카카오톡 링크**: `/report.txt` 엔드포인트로 리포트 제공
+- **최소 서버**: 카카오톡 링크용으로만 최적화
+- **외부 접근**: ngrok을 통한 외부에서도 접근 가능
 
 ### ⏰ 자동 스케줄링
 ```bash
@@ -151,8 +148,8 @@ ngrok http 5000
 ```
 
 #### ✅ 배포 확인
-- **웹 접속**: ngrok URL로 브라우저 접속
 - **카카오톡 테스트**: `python src/main.py`로 메시지 전송
+- **링크 테스트**: 카카오톡 "자세히 보기" 버튼으로 리포트 확인
 - **외부 접근**: 다른 기기에서도 ngrok URL로 접근 가능
 
 #### 💡 ngrok 장점
@@ -166,7 +163,7 @@ ngrok http 5000
 ### 📝 자동 메모 전송 (현재 사용 중)
 - **엔드포인트**: `v2/api/talk/memo/default/send`
 - **권한**: Talk API 스코프만 필요
-- **기능**: 본인에게 메모 전송
+- **기능**: 본인에게 메모 전송 + 웹 링크 지원
 - **상태**: ✅ 활성화됨
 
 ### 👥 친구 메시지 전송 (구현됨, 미사용)
