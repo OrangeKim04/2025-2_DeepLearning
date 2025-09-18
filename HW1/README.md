@@ -89,6 +89,9 @@ KAKAO_ACCESS_TOKEN=your_initial_access_token
 
 # OpenAI API (선택사항 - 뉴스 요약용)
 OPENAI_API_KEY=sk-your_openai_api_key
+
+# ngrok URL (외부 접근용)
+NGROK_URL=https://your-ngrok-url.ngrok-free.app
 ```
 
 #### 🔧 현재 프로젝트 설정 상태

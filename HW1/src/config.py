@@ -26,6 +26,7 @@ class AppConfig:
 	kakao_redirect_uri: str
 	kakao_access_token: Optional[str]
 	kakao_refresh_token: Optional[str]
+	ngrok_url: str
 
 	@staticmethod
 	def load() -> "AppConfig":
@@ -38,6 +39,7 @@ class AppConfig:
 			kakao_redirect_uri=os.getenv("KAKAO_REDIRECT_URI", "http://localhost"),
 			kakao_access_token=os.getenv("KAKAO_ACCESS_TOKEN"),
 			kakao_refresh_token=os.getenv("KAKAO_REFRESH_TOKEN"),
+			ngrok_url=os.getenv("NGROK_URL", ""),
 		)
 
 
