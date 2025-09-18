@@ -79,7 +79,7 @@ class KakaoClient:
 	def _send_single_message(self, text: str) -> None:
 		"""단일 메시지 전송"""
 		url = f"{KAKAO_API_HOST}/v2/api/talk/memo/default/send"
-		payload = {"object_type": "text", "text": text, "link": {}}
+		payload = {"object_type": "text", "text": text, "link": {"web_url": "https://0f62b96006fd.ngrok-free.app", "mobile_web_url": "https://0f62b96006fd.ngrok-free.app"}}
 		headers = self._get_auth_header()
 		headers["Content-Type"] = "application/x-www-form-urlencoded"
 		
@@ -103,7 +103,7 @@ class KakaoClient:
 
 	def send_to_friend(self, uuids: list[str], text: str) -> None:
 		url = f"{KAKAO_API_HOST}/v1/api/talk/friends/message/default/send"
-		payload = {"object_type": "text", "text": text, "link": {}}
+		payload = {"object_type": "text", "text": text, "link": {"web_url": "https://0f62b96006fd.ngrok-free.app", "mobile_web_url": "https://0f62b96006fd.ngrok-free.app"}}
 		headers = self._get_auth_header()
 		data = {"receiver_uuids": json_dumps(uuids), "template_object": json_dumps(payload)}
 		resp = requests.post(url, headers=headers, data=data, timeout=10)
