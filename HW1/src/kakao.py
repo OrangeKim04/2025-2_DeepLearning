@@ -82,9 +82,19 @@ class KakaoClient:
 		
 		# ngrok URL이 설정되어 있으면 링크 포함, 없으면 링크 없이 전송
 		if self.config.ngrok_url:
-			payload = {"object_type": "text", "text": text, "link": {"web_url": self.config.ngrok_url}}
+			report_link = f"{self.config.ngrok_url.rstrip('/')}/report.txt"
+			payload = {
+				"object_type": "text", 
+				"text": text, 
+				"link": {
+					"web_url": report_link,
+					"mobile_web_url": report_link
+				}
+			}
+			print(f"🔗 카카오톡 링크 설정: {report_link}")
 		else:
 			payload = {"object_type": "text", "text": text}
+			print("❌ ngrok URL이 설정되지 않음")
 			
 		headers = self._get_auth_header()
 		headers["Content-Type"] = "application/x-www-form-urlencoded"
@@ -112,7 +122,15 @@ class KakaoClient:
 		
 		# ngrok URL이 설정되어 있으면 링크 포함, 없으면 링크 없이 전송
 		if self.config.ngrok_url:
-			payload = {"object_type": "text", "text": text, "link": {"web_url": self.config.ngrok_url}}
+			report_link = f"{self.config.ngrok_url.rstrip('/')}/report.txt"
+			payload = {
+				"object_type": "text", 
+				"text": text, 
+				"link": {
+					"web_url": report_link,
+					"mobile_web_url": report_link
+				}
+			}
 		else:
 			payload = {"object_type": "text", "text": text}
 			
