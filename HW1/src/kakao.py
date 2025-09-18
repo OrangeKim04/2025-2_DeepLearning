@@ -48,10 +48,10 @@ class KakaoClient:
 			raise RuntimeError("Failed to acquire Kakao access token")
 		return {"Authorization": f"Bearer {token}"}
 
-	def send_self_memo(self, text: str) -> None:
+	def send_self_memo(self, text: str, link_path: str | None = None) -> None:
 		# 카카오톡 메시지를 한 번에 전송 (분할하지 않음)
 		# 카카오톡 API는 실제로 더 긴 메시지를 지원함
-		self._send_single_message(text)
+		self._send_single_message(text, link_path)
 	
 	def _split_message(self, text: str, max_length: int) -> list:
 		"""메시지를 적절한 길이로 분할"""
@@ -76,13 +76,14 @@ class KakaoClient:
 		
 		return parts
 	
-	def _send_single_message(self, text: str) -> None:
+	def _send_single_message(self, text: str, link_path: str | None = None) -> None:
 		"""단일 메시지 전송"""
 		url = f"{KAKAO_API_HOST}/v2/api/talk/memo/default/send"
 		
 		# ngrok URL이 설정되어 있으면 링크 포함, 없으면 링크 없이 전송
 		if self.config.ngrok_url:
-			report_link = f"{self.config.ngrok_url.rstrip('/')}/report.txt"
+			base = self.config.ngrok_url.rstrip('/')
+			report_link = f"{base}{link_path}" if link_path else f"{base}/report.txt"
 			payload = {
 				"object_type": "text", 
 				"text": text, 
@@ -117,12 +118,13 @@ class KakaoClient:
 		resp.raise_for_status()
 		return resp.json()
 
-	def send_to_friend(self, uuids: list[str], text: str) -> None:
+	def send_to_friend(self, uuids: list[str], text: str, link_path: str | None = None) -> None:
 		url = f"{KAKAO_API_HOST}/v1/api/talk/friends/message/default/send"
 		
 		# ngrok URL이 설정되어 있으면 링크 포함, 없으면 링크 없이 전송
 		if self.config.ngrok_url:
-			report_link = f"{self.config.ngrok_url.rstrip('/')}/report.txt"
+			base = self.config.ngrok_url.rstrip('/')
+			report_link = f"{base}{link_path}" if link_path else f"{base}/report.txt"
 			payload = {
 				"object_type": "text", 
 				"text": text, 

@@ -1,5 +1,6 @@
-from flask import Flask, Response
+from flask import Flask, Response, send_from_directory
 from data_manager import data_manager
+import os
 
 app = Flask(__name__)
 
@@ -63,6 +64,29 @@ def report_txt():
     """
     
     return Response(html_content, mimetype='text/html; charset=utf-8')
+
+@app.route('/reports/<path:filename>')
+def serve_report(filename: str):
+    """개별 카카오 메시지 전용 리포트 파일 제공 (HTML로 감싸기)"""
+    reports_dir = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', 'reports'))
+    file_path = os.path.join(reports_dir, filename)
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            report_text = f.read()
+    except FileNotFoundError:
+        report_text = "요청하신 리포트 파일을 찾을 수 없습니다."
+
+    html_template = """
+    <!doctype html>
+    <html lang=ko>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <style>body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#333;background:#fff;margin:0;padding:20px}}pre{{white-space:pre-wrap;background:#f8f9fa;border:1px solid #e9ecef;border-radius:8px;padding:15px;line-height:1.5;font-family:'Courier New',monospace}}</style>
+    <pre>%%REPORT%%</pre>
+    </html>
+    """
+    html = html_template.replace("%%REPORT%%", report_text)
+    return Response(html, mimetype='text/html; charset=utf-8')
 
 if __name__ == '__main__':
     print("🚀 웹 서버 시작 중... (카카오톡 링크용)")
