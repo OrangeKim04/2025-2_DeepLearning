@@ -51,18 +51,12 @@ def update_stock_data():
         # 추천 아이템 생성
         kr_items = []
         for ticker, df, meta in kr_selected:
-            entry, exit_ = suggest_entry_exit(meta)
             item = build_reco_item_kr(ticker, {**meta})
-            item["entry"] = entry
-            item["exit"] = exit_
             kr_items.append(item)
         
         us_items = []
         for ticker, df, meta in us_selected:
-            entry, exit_ = suggest_entry_exit(meta)
             item = build_reco_item_us(ticker, {**meta})
-            item["entry"] = entry
-            item["exit"] = exit_
             us_items.append(item)
         
         # 뉴스 요약

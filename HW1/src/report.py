@@ -39,7 +39,7 @@ def format_recommendation_block(title: str, items: List[Dict[str, Any]]) -> str:
 		lines.append(f"   52주 최저: {low52:,.0f}원")
 		lines.append(f"   52주 최고: {high52:,.0f}원")
 		lines.append("")
-		lines.append("─" * 50)
+		lines.append("─" * 20)
 		lines.append("")
 	return "\n".join(lines).strip()
 
@@ -82,17 +82,45 @@ def build_report(user_name: str, kr_recos: List[Dict[str, Any]], us_recos: List[
 
 def build_reco_item_kr(ticker: str, meta: Dict[str, Any]) -> Dict[str, Any]:
 	name = get_kr_ticker_name(ticker)
+	rsi = meta.get('rsi', 50)
+	macd = meta.get('macd', 0)
+	macd_signal = meta.get('macd_signal', 0)
+	vol_ratio = meta.get('vol', 0) / max(meta.get('vol_avg20', 1), 1)
+	close = meta.get("close", 0)
+	
+	# RSI 기반 매수/매도 시점 결정
+	if rsi < 30:
+		entry_condition = f"RSI {rsi:.1f}로 과매도 상태 - 3-5일 내 반등 기대"
+		exit_condition = f"RSI 60 이상 도달 시 (현재 {rsi:.1f})"
+	elif rsi < 50:
+		entry_condition = f"RSI {rsi:.1f}로 하락 모멘텀 완화 - 1-2일 내 매수"
+		exit_condition = f"RSI 65 이상 도달 시 (현재 {rsi:.1f})"
+	else:
+		entry_condition = f"RSI {rsi:.1f}로 강세 지속 - 즉시 매수 고려"
+		exit_condition = f"RSI 75 이상 도달 시 (현재 {rsi:.1f})"
+	
+	# MACD 기반 추가 조건
+	if macd > macd_signal:
+		entry_condition += f" (MACD {macd:.2f} > 시그널 {macd_signal:.2f})"
+	else:
+		entry_condition += f" (MACD {macd:.2f} < 시그널 {macd_signal:.2f} - 신중히 관찰)"
+	
+	# 거래량 기반 추가 조건
+	if vol_ratio > 1.5:
+		entry_condition += f" + 거래량 급증 {vol_ratio:.1f}배"
+	
 	reason = (
-		f"단기 추세 우위(SMA5>SMA20), RSI {meta.get('rsi'):.1f}, MACD 흐름 확인. "
-		f"거래량 {meta.get('vol')/max(meta.get('vol_avg20',1),1):.1f}배"
+		f"단기 추세 우위(SMA5>SMA20), RSI {rsi:.1f}, MACD 흐름 확인. "
+		f"거래량 {vol_ratio:.1f}배"
 	)
+	
 	return {
 		"ticker": ticker,
 		"name": name,
 		"reason": reason,
-		"entry": "단기 이동평균선이 장기 이동평균선을 돌파하는 시점",
-		"exit": "RSI 지수가 70 이상으로 과매수 구간에 진입했을 때",
-		"close": meta.get("close", float("nan")),
+		"entry": entry_condition,
+		"exit": exit_condition,
+		"close": close,
 		"low_52w": meta.get("low_52w", float("nan")),
 		"high_52w": meta.get("high_52w", float("nan")),
 	}
@@ -100,17 +128,50 @@ def build_reco_item_kr(ticker: str, meta: Dict[str, Any]) -> Dict[str, Any]:
 
 def build_reco_item_us(ticker: str, meta: Dict[str, Any]) -> Dict[str, Any]:
 	name = get_us_ticker_name(ticker)
+	rsi = meta.get('rsi', 50)
+	macd = meta.get('macd', 0)
+	macd_signal = meta.get('macd_signal', 0)
+	vol_ratio = meta.get('vol', 0) / max(meta.get('vol_avg20', 1), 1)
+	close = meta.get("close", 0)
+	
+	# RSI 기반 매수/매도 시점 결정
+	if rsi < 25:
+		entry_condition = f"RSI {rsi:.1f}로 극도 과매도 - 2-3일 내 강력 반등 예상"
+		exit_condition = f"RSI 55 이상 도달 시 (현재 {rsi:.1f})"
+	elif rsi < 40:
+		entry_condition = f"RSI {rsi:.1f}로 과매도 상태 - 1-2일 내 매수 기회"
+		exit_condition = f"RSI 65 이상 도달 시 (현재 {rsi:.1f})"
+	elif rsi < 60:
+		entry_condition = f"RSI {rsi:.1f}로 중립 구간 - MACD 신호 확인 후 매수"
+		exit_condition = f"RSI 70 이상 도달 시 (현재 {rsi:.1f})"
+	else:
+		entry_condition = f"RSI {rsi:.1f}로 강세 구간 - 즉시 매수 고려"
+		exit_condition = f"RSI 80 이상 도달 시 (현재 {rsi:.1f})"
+	
+	# MACD 기반 추가 조건
+	if macd > macd_signal:
+		entry_condition += f" (MACD {macd:.2f} > 시그널 {macd_signal:.2f} - 상승 신호)"
+	else:
+		entry_condition += f" (MACD {macd:.2f} < 시그널 {macd_signal:.2f} - 하락 신호 주의)"
+	
+	# 거래량 기반 추가 조건
+	if vol_ratio > 2.0:
+		entry_condition += f" + 거래량 폭증 {vol_ratio:.1f}배"
+	elif vol_ratio > 1.3:
+		entry_condition += f" + 거래량 증가 {vol_ratio:.1f}배"
+	
 	reason = (
-		f"상대적 강도(RSI {meta.get('rsi'):.1f})와 거래량 확대로 모멘텀 강화. "
-		f"MACD {meta.get('macd'):.2f}/{meta.get('macd_signal'):.2f}"
+		f"상대적 강도(RSI {rsi:.1f})와 거래량 확대로 모멘텀 강화. "
+		f"MACD {macd:.2f}/{macd_signal:.2f}"
 	)
+	
 	return {
 		"ticker": ticker,
 		"name": name,
 		"reason": reason,
-		"entry": "MACD가 시그널을 상향 돌파할 때",
-		"exit": "RSI 지수가 70 이상으로 과매수 구간에 진입했을 때",
-		"close": meta.get("close", float("nan")),
+		"entry": entry_condition,
+		"exit": exit_condition,
+		"close": close,
 		"low_52w": meta.get("low_52w", float("nan")),
 		"high_52w": meta.get("high_52w", float("nan")),
 	}

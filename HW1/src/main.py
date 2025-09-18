@@ -34,17 +34,11 @@ def run_once() -> None:
 	# Build reco lists
 	kr_items = []
 	for ticker, df, meta in kr_selected:
-		entry, exit_ = suggest_entry_exit(meta)
 		item = build_reco_item_kr(ticker, {**meta})
-		item["entry"] = entry
-		item["exit"] = exit_
 		kr_items.append(item)
 	us_items = []
 	for ticker, df, meta in us_selected:
-		entry, exit_ = suggest_entry_exit(meta)
 		item = build_reco_item_us(ticker, {**meta})
-		item["entry"] = entry
-		item["exit"] = exit_
 		us_items.append(item)
 	# News summary
 	headlines = fetch_market_headlines()
