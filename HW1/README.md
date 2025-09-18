@@ -83,7 +83,6 @@ USER_NAME=YOUR_NAME
 
 # 카카오 OAuth 설정 (필수)
 KAKAO_CLIENT_ID=your_kakao_rest_api_key
-KAKAO_REDIRECT_URI=http://localhost
 KAKAO_REFRESH_TOKEN=your_refresh_token
 KAKAO_ACCESS_TOKEN=your_initial_access_token
 
