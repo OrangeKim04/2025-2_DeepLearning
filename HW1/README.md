@@ -81,6 +81,10 @@ USER_NAME=YOUR_NAME
 
 # 카카오 OAuth 설정 (필수)
 KAKAO_CLIENT_ID=your_kakao_rest_api_key
+<<<<<<< HEAD
+=======
+KAKAO_REFRESH_TOKEN=your_refresh_token
+>>>>>>> 0f499f21b005fe71c0d414d3fa4e04e72b535756
 KAKAO_ACCESS_TOKEN=your_initial_access_token
 KAKAO_REFRESH_TOKEN=your_refresh_token
 
