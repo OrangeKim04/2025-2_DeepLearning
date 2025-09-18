@@ -5,9 +5,14 @@ app = Flask(__name__)
 
 @app.route('/report.txt')
 def report_txt():
-    """카카오톡과 동일한 리포트 원문을 HTML로 반환 (모바일 호환)"""
-    data = data_manager.get_fresh_data()
-    report_text = data.get('report_text', '')
+    """카카오톡에서 보낸 리포트 파일을 HTML로 반환 (모바일 호환)"""
+    try:
+        # 저장된 리포트 파일 읽기 (카카오톡과 동일한 내용)
+        with open('report.txt', 'r', encoding='utf-8') as f:
+            report_text = f.read()
+    except FileNotFoundError:
+        # 파일이 없으면 기본 메시지
+        report_text = "리포트 파일이 없습니다. 먼저 카카오톡 메시지를 전송해주세요."
     
     # HTML로 포맷팅 (모바일에서도 잘 보이도록)
     html_content = f"""
